@@ -1,30 +1,29 @@
 
 # The Graal Native Image Builder Feature 
 
+Hi, Spring fans! Welcome to another installment of _Spring Tips_. In this installment, we're going to look at the new support just released for building Spring Boot applications with GraalVM. We've looked at GraalVM and native images in another Spring Tips when we looked at Spring Fu.
 
-Hi, Spring fans! Welcome to another installment of _Spring Tips_. In this installment were going to look at the new support just released for building Sprin gboot applications with Graalvm . weve looked at graalvm anf natie images in another Spring Tips when we looked at Spring Fu.
+GraalVM is several things. It's a C1 replacement for a standard OpenJDK install. You can listen to this episode of my podcast, [_A Bootiful Podcast_](http://bootifulpdcast.fm), with [GraalVM contributor and Twitter engineer Chris Thalinger](https://mcdn.podbean.com/mf/web/mkmzne/8182415b-d8d6-4238-9141-83d845d98498.mp3), for more details on this use of GraalVM. It lets you run regular Sring applications faster in certain conditions, and so it's worth exploring for that reason alone. 
 
-graalvm is  several things. its a C1 JIY replacemnt. You can lsiten to this episode of my podcast, _A Bootiful Podcast_, with [GraalVM contributor and Twitter engineer Chris Thalinger](https://mcdn.podbean.com/mf/web/mkmzne/8182415b-d8d6-4238-9141-83d845d98498.mp3), for more details on this. It lets you run regualr Sring appliations faster in certain conditions and so its worth exploration for htat rason alone. 
+We're not going to talk about that in this video. Instead, we're going to look at a particular component inside Graal VM called the native image builder and SubstrateVM. SubstrateVM lets you build native images out of your Java application. Incidentally, I _also_ did a podcast with [Oracle Labs' Oleg Shelajev](https://spring.io/blog/2020/02/07/oleg-elajev-on-zeroturnaround-graalvm-the-vjug-and-so-much-more) on this and other uses of GraalVM.  The native image builder is an exercise in compromise. If you give GraalVM enough information about your application's runtime behavior  -  dynamically linked libraries,  reflection,   proxies, etc. - then it can turn your Java application into a statically linked binary, sort of like a C or Go-lang application. The process is, being honest here, sometimes... _painful_. BUT, once you do that, then the tool can generate native code for you that is _blazingly_ fast. The resulting application takes _way_ less RAM and starts up in below a second. _Waaay_ below a second. Pretty tantalizing, eh? It sure is! 
 
-but were not going to talk about that in this video. instead, were goin to olook at a particular ocmponetn inside Graal vsqlled substrate vm. SUbstrate vm lets you build native images out your java application.  The native image builder is an exercise in compromise. if you give it enough information to copletely isolate and control everything about your application -   dynmaically linked libraries,  refelction,   proxies, etc. - then it can turn you java applicatin into a statically linkned bianry, sort of like a C or Go-lang application. the process is, being honest hre, painful. BUT, once you do that then the tool can generate native code for you that is _blazingly_ fast. the resulting aplication takes wa less ram, and rstarts up in waaaay below a second. Pretty tantalizing eh? it sure is! 
+Keep in mind though that there are other costs to be aware of when you run the application. Graal native images are not Java applications. They don't even run on a traditional JVM. Oracle Labs develop GraalVM, and so there's some level of cooperation between the Java and GraalVM teams, but I would not call it Java. The resulting binary is not cross-platform.  When the application runs, it won't run on the JVM; it'll run on another runtime called SubstrateVM. 
 
-Keep i mind thogh that there are other costs to be aware of when you run the palication. graal native images are not java pplications. thye dont even run on a tradition jvm. graal vm is developed by oracle labs, and so theres some level of cooperation between the java and graalvm teams, but i would not call it java. the resulting bimnary is not cross platform. and when it runs, it wont run on the jvm, itll run on another runtime called substrate vm. 
+So the tradeoffs are many, but still, I think there's a lot of potential value in using this tool to build applications—especially those destined for production in a cloud environment where scale and efficiency are fo paramount concern. 
 
-So the tradeoffs are many but still, i think thres a lot of potential vaue in using this  tool to build applications. Especially those desitned for prodution in a cloud envronemtn where scale and efficiency is fo paramount concern. 
+Let's get started. You're going to need to install GraalVM. You could download [it here](https://www.graalvm.org/), or u could download it using [SDKmanager](http://sdkman.io). I like to use SDKManager to install my Java distributions.  GraalVm tends to be a little behind the mainline version of Java. Currently, it supports java 8 and java 11. Not, notably, java 14 or 15 or whatever the current version of Java is when you read and watch this. 
 
-Lets get started. youre going to need to install GraalVM. You could download [it here](https://www.graalvm.org/) or u could download it using [SDKmanager](http://sdkman.io). I liek to use SDKmanage ro install tmy java distributions.  GrralVm tensd sto bw a little ehidn the mainline version of jva. currently it supports java 8 and java 11. Not, notably, java 14 or 15 or whatever the current versio of java is when you read and watch this. 
+Do this to install graalvm for Java 8: `sdk install java 20.0.0.r8-grl`. I'd recommend Java 8, instead of java 11, as there are some subtle bugs I can't quite figure out yet with the java 11 variant. 
 
-Do this to install graalvm for Java 8: `sdk install java 20.0.0.r8-grl`. Id recommend java 8, insead of java 11, as there are some subtle bugs I cant quite figure out yet with the java 11 variant. 
-
-Once youve done that ou also need to install the antive image builder component separately. Run this: `gu install native-image`.  `gu` is a utiluty that you get in a graalvm. Finaly, make sure you have `JAVA_HOME` is setup to point to graalvm. on my machine, a macintosh wuth SDKMAN, my Java_HOME looks like this: 
+Once you've done that, you also need to install the native image builder component separately. Run this: `gu install native-image`.  `gu` is a utility that you get in a graalvm. Finally, make sure you have `JAVA_HOME` is set up to point to graalvm. on my machine, a Macintosh with SDKMAN, my Java_HOME looks like this: 
 
 ```bash
 export JAVA_HOME=$HOME/.sdkman/candidates/java/current/
 ``` 
 
-Ok, now that youve got that all setup,lets lok at our application. first thing, go [to the Spring Initializr ](http://start.Spring.io) and generate a new project usign `Lombok`, `R2DBC`, `PostgreSQL`, and `Reactive Web`. 
+Ok, now that you've got that all set up, let's look at our application. First thing, go [to the Spring Initializr ](http://start.Spring.io) and generate a new project using `Lombok`, `R2DBC`, `PostgreSQL`, and `Reactive Web`. 
 
-You've seen this kind of code a million times, so I wont review it excetp tot reprint it here. 
+You've seen this kind of code a million times, so I won't review it beyond reprinting it here. 
 
 ```java
 package com.example.reactive;
@@ -61,36 +60,36 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @SpringBootApplication(proxyBeanMethods = false)
 public class ReactiveApplication {
 
-	@Bean
-	RouterFunction<ServerResponse> routes(ReservationRepository rr) {
-		return route()
-			.GET("/reservations", r -> ok().body(rr.findAll(), Reservation.class))
-			.build();
-	}
+    @Bean
+    RouterFunction<ServerResponse> routes(ReservationRepository rr) {
+        return route()
+            .GET("/reservations", r -> ok().body(rr.findAll(), Reservation.class))
+            .build();
+    }
 
-	@Bean
-	ApplicationRunner runner(DatabaseClient databaseClient, ReservationRepository reservationRepository) {
-		return args -> {
+    @Bean
+    ApplicationRunner runner(DatabaseClient databaseClient, ReservationRepository reservationRepository) {
+        return args -> {
 
-			Flux<Reservation> names = Flux
-				.just("Andy", "Sebastien")
-				.map(name -> new Reservation(null, name))
-				.flatMap(reservationRepository::save);
+            Flux<Reservation> names = Flux
+                .just("Andy", "Sebastien")
+                .map(name -> new Reservation(null, name))
+                .flatMap(reservationRepository::save);
 
-			databaseClient
-				.execute("create table reservation(id serial primary key, name varchar(255) not null )")
-				.fetch()
-				.rowsUpdated()
-				.thenMany(names)
-				.thenMany(reservationRepository.findAll())
-				.subscribe(log::info);
-		};
-	}
+            databaseClient
+                .execute("create table reservation(id serial primary key, name varchar(255) not null )")
+                .fetch()
+                .rowsUpdated()
+                .thenMany(names)
+                .thenMany(reservationRepository.findAll())
+                .subscribe(log::info);
+        };
+    }
 
 
-	public static void main(String[] args) {
-		SpringApplication.run(ReactiveApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ReactiveApplication.class, args);
+    }
 }
 
 interface ReservationRepository extends ReactiveCrudRepository<Reservation, Integer> {
@@ -102,19 +101,21 @@ interface ReservationRepository extends ReactiveCrudRepository<Reservation, Inte
 @NoArgsConstructor
 class Reservation {
 
-	@Id
-	private Integer id;
-	private String name;
+    @Id
+    private Integer id;
+    private String name;
 }
 
 ```
 
-The only notable thing in this sapplcation is that we're using SPring Noto's proxyBeanMethods attribute to make sure that we avodi the use of CGLIb and any other non JDK proxies in the appkication. Graal _hates_ non-JDK proxies, and even with JDK proxies there's work to be done to make Graal aware of it. this attribute is new in spring framework 5.2 and is designed, in part, to support graalvm applications. 
+The only notable thing in this application is that we're using SPring Noto's proxyBeanMethods attribute to make sure that we avoid the use of CGLIb and any other non-JDK proxies in the app. Graal _hates_ non-JDK proxies, and even with JDK proxies, there's work to be done to make Graal aware of it. This attribute is new in spring framework 5.2 and is designed, in part, to support graalvm applications. 
 
 
-So lets talk about that. I alluded earlier that we need o teach GraalVm about te tricky things we might do in our application at runtime that it might not appreciate if we do it in a native image. Things like revlection, proxies, etc. There are a few ways to do this. You can hand craft some configuration and include it in your build. GRaal will automatically inluce tht. You can also run your program under the watch of an java agent an that java agent will note the tricky things that your application does adn - once the applicatinos conlcided - write all that stuff dow in config files which can then be fed to the graal compiler. Another thing you can do wen you run the aplcation is run a _feature_.  A Graal feature. is sort of lie a java agent. it ahas the abiluty to feed information into the graal compiler based on whatever analysis it does. our eature knows and understands how Spring applications work. it knows when Spring beans are proxies. It knows how classes are constructed dynamically at runtiem. It knowws how SPring works and it knows wht Graal wants,, nost of the time. (this is a n early release, after all!)
+So let's talk about that. I alluded earlier that we need to teach GraalVm about te tricky things we might do in our application at runtime that it might not appreciate if we do it in a native image. Things like reflection, proxies, etc. There are a few ways to do this. You can handcraft some configuration and include it in your build. Graal will automatically add that. You can also run your program under the watch of a Java agent that will note the tricky things that your application does and - once the application's concluded - write all that stuff down in config files, which can then be fed to the Graal compiler.
 
-Wr also need to customzr the build. Heres mu `pom.xml`.
+Another thing you can do when you run the application is run a _feature_.  A Graal feature is sort of like a Java agent. it can feed information into the Graal compiler based on whatever analysis it does. Our feature knows and understands how Spring applications work. It knows when Spring beans are proxies. It knows how classes are constructed dynamically at runtime. It knows how SPring works, and it knows what Graal wants, most of the time. (this is an early release, after all!)
+
+We also need to customize the build. Heres my `pom.xml`.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -246,7 +247,7 @@ Wr also need to customzr the build. Heres mu `pom.xml`.
 
 ```
 
-Tne notable thing here is that weve added the `native-image-maven-plugin` plugin to the build. The plugin also takes some command line confguaions that help it understand what it should do. That long list of command ine arguments in the `buildArgs` elemtns represent the command line witches required to make this application eun. (I owe a _huge_  thanks to Spring Graal Featuee lead Andy Clement for figuring all this out!) 
+Tne notable thing here is that we've added the `native-image-maven-plugin` plugin to the build. The plugin also takes some command line configurations that help it understand what it should do. That long list of command-line arguments in the `buildArgs` elements represent the command line witches required to make this application run. (I owe a _huge_  thanks to Spring Graal Feature lead Andy Clement for figuring all this out!) 
 
 ```xml
 <dependency>
@@ -256,13 +257,13 @@ Tne notable thing here is that weve added the `native-image-maven-plugin` plugin
 </dependency>
 ```
 
-We want to exploit as many vehicoles to contribute information to the graal compielr about how tht epaplicationm shoujld run. We're going to levetag eht ejava agent approach. Were going to leverage the Graal feature approach. Wer alos going to leverage command line configuration. All this ifnormation, taken together, gives graal enough information to successfully turn out appkicatino ito a statically compiled native image. The goal, in the long tterm, is for Spring projects and the Spring Graal feature fo everuthing to support htis proces.
+We want to exploit as many vehicles to contribute information to the GraalVM compiler about how the application should run. We're going to leverage the Java agent approach. Were going to leverage the Graal feature approach. We're also going to leverage command-line configuration. All this information, taken together, gives graal enough information to turn out the application to a statically compiled native image successfully. The goal, in the long term, is for Spring projects and the Spring Graal feature fo everything to support this process.
 
-Now that wee got this all convifugeed lets build the application. Heres the basic workflow.
+Now that we got this all configured, let's build the application. Here's the basic workflow.
 
-* Compilee te java applicati, as normal 
-* runt he java application with the java agnt to collect iforatino. We need to make sure toe xercise the application at this point. Exercise every pathway possible! This is exactly the sort of use case for CI and testing, by the way! They always ay that you should make your application work (which you can do by testing it) and _then_ make it fast. Now, with Graal, you can do both! 
-* then rebuild the application again, this time wth the `graal` profie active to compile the native image using the infroramtion gathered from the first run. 
+* Compile the Java application, as normal 
+* runt he java application with the java agent to collect information. We need to make sure to exercise the application at this point. Exercise every pathway possible! This is precisely the sort of use case for CI and testing, by the way! They always say that you should make your application work (which you can do by testing it) and _then_ make it fast. Now, with Graal, you can do both! 
+* then rebuild the application again, this time with the `graal` profile active to compile the native image using the information gathered from the first run. 
 
 ```bash 
 mvn -DskipTests=true clean package
@@ -276,16 +277,16 @@ java -agentlib:native-image-agent=config-output-dir=${MI}/native-image -jar targ
 tree $MI
 mvn -Pgraal clean package
 ```
-And if all that worked, theh you should be able to see the reusllting application in the `target` diectory. Run it, like this.
+And if all that worked, then you should be able to see the resulting application in the `target` directory. Run it like this.
 
 ```bash 
 ./target/com.example.reactive.reactiveapplication 
 ```
 
-Your application should zpin up, evident from the output of the applkcation like this. 
+Your application should spin up, evident from the output of the application like this. 
 
 ```
 2020-04-15 23:25:08.826  INFO 7692 --- [           main] c.example.reactive.ReactiveApplication   : Started ReactiveApplication in 0.099 seconds (JVM running for 0.103)
 ```
 
-Pretty cool, eh? The greaal nativ eimage builder is a nice fit when paired with a cloud platform like cloud goundry or kberentes. You can easily containerize the application and get it working in a cloud paltform with a minimal footprint. Enjoy! And as always, we'd love to hear from you. Does this technology sut your use case? Qustions? Comments? Feedback and sound off to [us on Twitter](http://twitter.com/Springcentral).
+Pretty cool, eh? The GraalVM native image builder is an excellent fit when paired with a cloud platform like CloudFoundry or Kubernetes. You can easily containerize the application and get it working on a cloud platform with a minimal footprint. Enjoy! And as always, we'd love to hear from you. Does this technology suit your use case? Questions? Comments? Feedback and sound off to [us on Twitter](http://twitter.com/Springcentral).
