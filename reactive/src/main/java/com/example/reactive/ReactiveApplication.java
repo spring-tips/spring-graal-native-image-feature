@@ -8,12 +8,22 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
+import org.springframework.web.reactive.socket.WebSocketHandler;
+import org.springframework.web.reactive.socket.WebSocketMessage;
+import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
 import reactor.core.publisher.Flux;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.stream.Stream;
 
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -48,13 +58,13 @@ public class ReactiveApplication {
 		};
 	}
 
+
 	public static void main(String[] args) {
 		SpringApplication.run(ReactiveApplication.class, args);
 	}
 }
 
 interface ReservationRepository extends ReactiveCrudRepository<Reservation, Integer> {
-
 }
 
 
@@ -68,3 +78,34 @@ class Reservation {
 	private String name;
 }
 
+
+/**
+	* Bonus round! This is a simple websocket application.
+	* Point <a href="http://localhost:8080/ws.htm"></a>your browser
+	* here</a> to see it in action.
+	*
+ */
+@Configuration
+class WebSocketConfiguration {
+
+	@Bean
+	WebSocketHandler webSocketHandler() {
+		return session -> {
+			Flux<WebSocketMessage> map = Flux
+				.fromStream(Stream.generate(() -> "Hello, world @ " + Instant.now()))
+				.delayElements(Duration.ofSeconds(1))
+				.map(session::textMessage);
+			return session.send(map);
+		};
+	}
+
+	@Bean
+	SimpleUrlHandlerMapping simpleUrlHandlerMapping(WebSocketHandler wsh) {
+		return new SimpleUrlHandlerMapping(Collections.singletonMap("/ws/greetings", wsh), 10);
+	}
+
+	@Bean
+	WebSocketHandlerAdapter webSocketHandlerAdapter() {
+		return new WebSocketHandlerAdapter();
+	}
+}

@@ -12,6 +12,7 @@
     {"pattern":"\\Qapplication.properties\\E"}, 
     {"pattern":"\\Qcom/example/reactive/ReactiveApplication.class\\E"}, 
     {"pattern":"\\Qcom/example/reactive/ReservationRepository.class\\E"}, 
+    {"pattern":"\\Qcom/example/reactive/WebSocketConfiguration.class\\E"}, 
     {"pattern":"\\Qcom/example/reactive/\\E"}, 
     {"pattern":"\\Qorg/h2/util/data.zip\\E"}, 
     {"pattern":"\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"}, 
@@ -130,6 +131,7 @@
     {"pattern":"\\Qorg/springframework/data/repository/core/support/RepositoryFragmentsFactoryBean.class\\E"}, 
     {"pattern":"\\Qorg/springframework/data/repository/reactive/ReactiveCrudRepository.class\\E"}, 
     {"pattern":"\\Qorg/springframework/http/codec/CodecConfigurer.properties\\E"}, 
+    {"pattern":"\\Qorg/springframework/http/mime.types\\E"}, 
     {"pattern":"\\Qorg/springframework/transaction/annotation/AbstractTransactionManagementConfiguration.class\\E"}, 
     {"pattern":"\\Qorg/springframework/transaction/annotation/EnableTransactionManagement.class\\E"}, 
     {"pattern":"\\Qorg/springframework/transaction/annotation/ProxyTransactionManagementConfiguration.class\\E"}, 
@@ -138,7 +140,8 @@
     {"pattern":"\\Qorg/springframework/web/reactive/config/WebFluxConfigurationSupport$EmptyHandlerMapping.class\\E"}, 
     {"pattern":"\\Qorg/springframework/web/reactive/config/WebFluxConfigurationSupport$NoOpValidator.class\\E"}, 
     {"pattern":"\\Qorg/springframework/web/reactive/config/WebFluxConfigurationSupport.class\\E"}, 
-    {"pattern":"\\Qorg/springframework/web/reactive/config/WebFluxConfigurer.class\\E"}
+    {"pattern":"\\Qorg/springframework/web/reactive/config/WebFluxConfigurer.class\\E"}, 
+    {"pattern":"\\Qstatic/ws.html\\E"}
   ],
   "bundles":[]
 }
