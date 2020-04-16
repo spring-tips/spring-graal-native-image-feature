@@ -11,9 +11,6 @@
   "name":"boolean[]"
 },
 {
-  "name":"byte[]"
-},
-{
   "name":"ch.qos.logback.classic.pattern.DateConverter",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -41,35 +38,32 @@
   "name":"ch.qos.logback.core.Appender"
 },
 {
-  "name":"char[]"
+  "name":"com.example.reactive.ReactiveApplication",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
-  "name":"com.example.traditional.Reservation",
+  "name":"com.example.reactive.ReactiveApplication$$Lambda$568/1327006586",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"run","parameterTypes":["org.springframework.boot.ApplicationArguments"] }]
+},
+{
+  "name":"com.example.reactive.Reservation",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true
 },
 {
-  "name":"com.example.traditional.ReservationRepository",
+  "name":"com.example.reactive.ReservationRepository",
   "allDeclaredMethods":true,
   "allPublicMethods":true
 },
 {
-  "name":"com.example.traditional.Reservation_Instantiator_welutd",
+  "name":"com.example.reactive.Reservation_Instantiator_64ibm3",
   "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.example.traditional.TraditionalApplication",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"com.example.traditional.TraditionalApplication$$Lambda$635/0x00000008403a5840",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"run","parameterTypes":["org.springframework.boot.ApplicationArguments"] }]
 },
 {
   "name":"com.fasterxml.jackson.core.JsonGenerator"
@@ -383,17 +377,11 @@
   "name":"java.lang.Class[]"
 },
 {
-  "name":"java.lang.Comparable",
-  "allDeclaredMethods":true
-},
-{
   "name":"java.lang.Comparable[]"
 },
 {
   "name":"java.lang.Integer",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredMethods":true
 },
 {
   "name":"java.lang.Iterable",
@@ -401,28 +389,11 @@
   "allPublicMethods":true
 },
 {
-  "name":"java.lang.Module",
-  "allDeclaredMethods":true
-},
-{
-  "name":"java.lang.Number",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
   "name":"java.lang.Object",
   "allDeclaredMethods":true
 },
 {
   "name":"java.lang.Object[]"
-},
-{
-  "name":"java.lang.Runtime",
-  "methods":[{"name":"version","parameterTypes":[] }]
-},
-{
-  "name":"java.lang.Runtime$Version",
-  "methods":[{"name":"major","parameterTypes":[] }]
 },
 {
   "name":"java.lang.String",
@@ -456,23 +427,12 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"java.lang.invoke.MethodHandles",
-  "methods":[{"name":"privateLookupIn","parameterTypes":["java.lang.Class","java.lang.invoke.MethodHandles$Lookup"] }]
-},
-{
-  "name":"java.lang.invoke.MethodHandles$Lookup",
-  "methods":[{"name":"defineClass","parameterTypes":["byte[]"] }]
-},
-{
   "name":"java.lang.management.ManagementFactory",
   "methods":[{"name":"getRuntimeMXBean","parameterTypes":[] }]
 },
 {
   "name":"java.lang.management.RuntimeMXBean",
-  "methods":[
-    {"name":"getInputArguments","parameterTypes":[] }, 
-    {"name":"getName","parameterTypes":[] }
-  ]
+  "methods":[{"name":"getName","parameterTypes":[] }]
 },
 {
   "name":"java.lang.reflect.AnnotatedElement",
@@ -492,7 +452,7 @@
 },
 {
   "name":"java.nio.Bits",
-  "fields":[{"name":"UNALIGNED"}]
+  "methods":[{"name":"unaligned","parameterTypes":[] }]
 },
 {
   "name":"java.nio.Buffer",
@@ -500,6 +460,7 @@
 },
 {
   "name":"java.nio.DirectByteBuffer",
+  "fields":[{"name":"cleaner", "allowUnsafeAccess":true}],
   "methods":[{"name":"<init>","parameterTypes":["long","int"] }]
 },
 {
@@ -545,12 +506,12 @@
   "name":"java.util.concurrent.Executor"
 },
 {
-  "name":"java.util.concurrent.Flow$Publisher"
-},
-{
   "name":"java.util.function.Supplier",
   "allDeclaredMethods":true,
   "allPublicMethods":true
+},
+{
+  "name":"javax.activation.MimeType"
 },
 {
   "name":"javax.annotation.ManagedBean"
@@ -569,15 +530,29 @@
   "name":"javax.sql.DataSource"
 },
 {
-  "name":"jdk.internal.misc.Unsafe",
-  "methods":[{"name":"getUnsafe","parameterTypes":[] }]
+  "name":"javax.xml.bind.Binder"
+},
+{
+  "name":"javax.xml.ws.WebServiceRef"
 },
 {
   "name":"org.aopalliance.intercept.MethodInterceptor",
   "allPublicMethods":true
 },
 {
+  "name":"org.apache.logging.log4j.message.DefaultFlowMessageFactory",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.apache.logging.log4j.message.ReusableMessageFactory",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"org.apache.logging.log4j.spi.ExtendedLogger"
+},
+{
+  "name":"org.apache.logging.slf4j.SLF4JLoggerContextFactory",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"org.apache.logging.slf4j.SLF4JProvider"
@@ -928,6 +903,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"org.springframework.boot.autoconfigure.availability.ApplicationAvailabilityAutoConfiguration",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration$CacheConfigurationImportSelector",
   "allDeclaredConstructors":true
 },
@@ -1091,7 +1072,7 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"org.springframework.boot.autoconfigure.http.codec.CodecsAutoConfiguration$DefaultCodecsConfiguration$$Lambda$640/0x00000008403a4040",
+  "name":"org.springframework.boot.autoconfigure.http.codec.CodecsAutoConfiguration$DefaultCodecsConfiguration$$Lambda$573/1364767791",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"customize","parameterTypes":["org.springframework.http.codec.CodecConfigurer"] }]
@@ -1103,7 +1084,7 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"org.springframework.boot.autoconfigure.http.codec.CodecsAutoConfiguration$JacksonCodecConfiguration$$Lambda$641/0x00000008403a4440",
+  "name":"org.springframework.boot.autoconfigure.http.codec.CodecsAutoConfiguration$JacksonCodecConfiguration$$Lambda$574/1926343982",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"customize","parameterTypes":["org.springframework.http.codec.CodecConfigurer"] }]
@@ -1492,6 +1473,13 @@
 {
   "name":"org.springframework.boot.autoconfigure.web.servlet.JspTemplateAvailabilityProvider",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.springframework.boot.availability.ApplicationAvailabilityProvider",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"onApplicationEvent","parameterTypes":["org.springframework.context.ApplicationEvent"] }]
 },
 {
   "name":"org.springframework.boot.builder.ParentContextCloserApplicationListener",
@@ -1988,9 +1976,6 @@
 {
   "name":"org.springframework.core.annotation.Order",
   "allDeclaredMethods":true
-},
-{
-  "name":"org.springframework.core.annotation.SynthesizedAnnotation"
 },
 {
   "name":"org.springframework.core.convert.ConversionService",
@@ -2629,7 +2614,7 @@
   "name":"org.springframework.web.reactive.accept.RequestedContentTypeResolverBuilder"
 },
 {
-  "name":"org.springframework.web.reactive.accept.RequestedContentTypeResolverBuilder$$Lambda$664/0x00000008403c4c40",
+  "name":"org.springframework.web.reactive.accept.RequestedContentTypeResolverBuilder$$Lambda$599/1754662105",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"resolveMediaTypes","parameterTypes":["org.springframework.web.server.ServerWebExchange"] }]
@@ -2714,19 +2699,19 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"org.springframework.web.reactive.function.server.RouterFunctions$AbstractRouterFunction",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"toString","parameterTypes":[] }]
-},
-{
-  "name":"org.springframework.web.reactive.function.server.RouterFunctions$DefaultRouterFunction",
+  "name":"org.springframework.web.reactive.function.server.RouterFunctionBuilder$BuiltRouterFunction",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[
     {"name":"accept","parameterTypes":["org.springframework.web.reactive.function.server.RouterFunctions$Visitor"] }, 
     {"name":"route","parameterTypes":["org.springframework.web.reactive.function.server.ServerRequest"] }
   ]
+},
+{
+  "name":"org.springframework.web.reactive.function.server.RouterFunctions$AbstractRouterFunction",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"org.springframework.web.reactive.function.server.support.HandlerFunctionAdapter",
@@ -2963,13 +2948,6 @@
   "name":"org.synchronoss.cloud.nio.multipart.NioMultipartParser"
 },
 {
-  "name":"reactor.adapter.JdkFlowAdapter",
-  "methods":[
-    {"name":"flowPublisherToFlux","parameterTypes":["java.util.concurrent.Flow$Publisher"] }, 
-    {"name":"publisherToFlowPublisher","parameterTypes":["org.reactivestreams.Publisher"] }
-  ]
-},
-{
   "name":"reactor.core.Disposable",
   "allDeclaredMethods":true,
   "allPublicMethods":true
@@ -3010,20 +2988,27 @@
   ]
 },
 {
+  "name":"sun.misc.Cleaner",
+  "methods":[{"name":"clean","parameterTypes":[] }]
+},
+{
   "name":"sun.misc.Unsafe",
   "fields":[{"name":"theUnsafe"}],
   "methods":[
     {"name":"copyMemory","parameterTypes":["java.lang.Object","long","java.lang.Object","long","long"] }, 
     {"name":"getAndAddLong","parameterTypes":["java.lang.Object","long","long"] }, 
-    {"name":"getAndSetObject","parameterTypes":["java.lang.Object","long","java.lang.Object"] }, 
-    {"name":"invokeCleaner","parameterTypes":["java.nio.ByteBuffer"] }
+    {"name":"getAndSetObject","parameterTypes":["java.lang.Object","long","java.lang.Object"] }
   ]
+},
+{
+  "name":"sun.misc.VM",
+  "methods":[{"name":"maxDirectMemory","parameterTypes":[] }]
 },
 {
   "name":"sun.nio.ch.SelectorImpl",
   "fields":[
-    {"name":"publicSelectedKeys", "allowUnsafeAccess":true}, 
-    {"name":"selectedKeys", "allowUnsafeAccess":true}
+    {"name":"publicSelectedKeys"}, 
+    {"name":"selectedKeys"}
   ]
 }
 ]

@@ -1,8 +1,9 @@
-package com.example.traditional;
+package com.example.reactive;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,12 +13,14 @@ import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
+@Log4j2
 @SpringBootApplication(proxyBeanMethods = false)
-public class TraditionalApplication {
+public class ReactiveApplication {
 
 	@Bean
 	RouterFunction<ServerResponse> routes(ReservationRepository rr) {
@@ -26,28 +29,27 @@ public class TraditionalApplication {
 			.build();
 	}
 
-
 	@Bean
-	ApplicationRunner runner(DatabaseClient dbc, ReservationRepository reservationRepository) {
+	ApplicationRunner runner(DatabaseClient databaseClient, ReservationRepository reservationRepository) {
 		return args -> {
 
-			dbc.execute("create table reservation\n" +
-				"(\n" +
-				"    id   serial primary key,\n" +
-				"    name varchar(255) not null\n" +
-				")").fetch()
-				.rowsUpdated().subscribe();
+			Flux<Reservation> names = Flux
+				.just("Andy", "Sebastien")
+				.map(name -> new Reservation(null, name))
+				.flatMap(reservationRepository::save);
 
-
-			reservationRepository.save(new Reservation(null ,"Andy")).subscribe();
-			reservationRepository.save(new Reservation(null ,"Sebastien")).subscribe();
-
-			reservationRepository.findAll().subscribe(System.out::println);;
+			databaseClient
+				.execute("create table reservation ( id   serial primary key, name varchar(255) not null )")
+				.fetch()
+				.rowsUpdated()
+				.thenMany(names)
+				.thenMany(reservationRepository.findAll())
+				.subscribe(log::info);
 		};
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(TraditionalApplication.class, args);
+		SpringApplication.run(ReactiveApplication.class, args);
 	}
 }
 
